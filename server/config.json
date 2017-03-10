@@ -1,0 +1,17 @@
+{
+  "db": {
+    "name": "test",
+    "path": "../database"
+  },
+  "public": {
+    "path": "../public"
+  },
+  "log": {
+    "name": "eDictation.log",
+    "path": "../log"
+  },
+  "server": {
+    "host": "localhost",
+    "port": "5000"
+  }
+}

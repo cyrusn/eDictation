@@ -1,0 +1,11 @@
+{
+  "name": "e_dictation_client",
+  "version": "1.0.0",
+  "description": "Using ReactJS to generate front end application for eDictation system",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CyrusN",
+  "license": "ISC"
+}
