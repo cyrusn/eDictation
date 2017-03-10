@@ -1,18 +1,29 @@
+// const Joi = require('joi');
+
 var testHandlers = require('./handler/test.js').test;
 
 module.exports = [
   {
     method: 'GET',
     path: '/api/test',
-    handler: testHandlers
+    config: {
+      description: 'Simple Test API',
+      notes: 'Return a simple JSON with message "Hello World',
+      tags: ['api'], // ADD THIS TAG
+      handler: testHandlers
+    }
   }, {
     method: 'GET',
     path: '/{param*}',
-    handler: {
-      directory: {
-        path: '.',
-        redirectToSlash: true,
-        index: true
+    config: {
+      description: 'Serve Public Folder',
+      tags: ['api'], // ADD THIS TAG
+      handler: {
+        directory: {
+          path: '.',
+          redirectToSlash: true,
+          index: true
+        }
       }
     }
   }

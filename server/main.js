@@ -1,8 +1,12 @@
 const Hapi = require('hapi');
-const Config = require('./config.json');
-const Routes = require('./api/route.js');
-const Logging = require('./helper/logging.js');
 const Inert = require('inert');
+const Vision = require('vision');
+const HapiSwagger = require('hapi-swagger');
+
+const Pack = require('./package');
+const Config = require('./config');
+const Logging = require('./helper/logging');
+const Routes = require('./api/route');
 
 const Port = Config.server.port;
 const Host = Config.server.host;
@@ -18,12 +22,22 @@ const server = new Hapi.Server({
   }
 });
 
+const SwaggerOptions = {
+  info: {
+    'title': 'eDictation API Documentation',
+    'version': Pack.version
+  }
+};
+
 server.connection({
   port: Port,
   host: Host
 });
 
-server.register([Logging, Inert], (err) => {
+server.register([Logging, Inert, Vision, {
+  'register': HapiSwagger,
+  'options': SwaggerOptions
+}], (err) => {
   if (err) return;
 
   server.route(Routes);
