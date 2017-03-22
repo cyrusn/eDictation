@@ -26,7 +26,9 @@ const SwaggerOptions = {
   info: {
     'title': 'eDictation API Documentation',
     'version': Pack.version
-  }
+  },
+  basePath: '/api',
+  pathPrefixSize: 2
 };
 
 server.connection({

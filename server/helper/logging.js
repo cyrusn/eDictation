@@ -1,3 +1,4 @@
+// hapiJS logging pluggin
 const Good = require('good');
 const LogFileConfig = require('../config.json').log;
 const Path = require('path');
