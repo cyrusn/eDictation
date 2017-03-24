@@ -4,17 +4,23 @@
   "description": "An application for dictation",
   "main": "main.js",
   "scripts": {
-    "test": "nodemon main.js"
+    "start": "nodemon main.js",
+    "test": "mocha"
   },
   "keywords": [
     "dictation"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyrusn/eDictation.git"
+  },
   "author": [
     "CyrusN",
     "SamF"
   ],
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.1.2",
     "good": "^7.1.0",
     "good-console": "^6.4.0",
     "good-file": "^6.0.1",
@@ -23,11 +29,13 @@
     "hapi-swagger": "^7.7.0",
     "inert": "^4.1.0",
     "joi": "^10.2.2",
-    "level": "^1.6.0",
     "lodash": "^4.17.4",
+    "mongoose": "^4.9.1",
+    "tracer": "^0.8.7",
     "vision": "^4.1.1"
   },
   "devDependencies": {
+    "mocha": "^3.2.0",
     "nodemon": "^1.11.0"
   }
 }

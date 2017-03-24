@@ -2,13 +2,32 @@ const Joi = require('joi');
 const testHandler = require('../handler/test.js').test;
 const addPrefix = require('../../helper/func').addPrefix;
 
+const definationSchema = Joi.array().items({
+  lexicalCategory: Joi.string(),
+  eng: Joi.string(),
+  chi: Joi.string(),
+  examples: Joi.array().items({
+    text: Joi.string(),
+    translation: Joi.string()
+  })
+});
+
+const vocabSchema = Joi.object({
+  word: Joi.string(),
+  phonetic: Joi.string(),
+  definations: Joi.array().items(definationSchema)
+});
+
 const routes = [
   {
     method: 'POST',
     path: '/add',
     config: {
       description: 'Add vocabulary to database',
-      tags: ['api', 'vocabulary'] // ADD THIS TAG
+      tags: ['api', 'vocabulary'],
+      validate: {
+        payload: vocabSchema
+      }
     },
     handler: testHandler
   }, {
@@ -16,7 +35,7 @@ const routes = [
     path: '/edit',
     config: {
       description: 'edit existing vocabulary in database',
-      tags: ['api', 'vocabulary'] // ADD THIS TAG
+      tags: ['api', 'vocabulary']
     },
     handler: testHandler
   }, {
@@ -24,7 +43,7 @@ const routes = [
     path: '/delete',
     config: {
       description: 'delete existing vocabulary in database',
-      tags: ['api', 'vocabulary'] // ADD THIS TAG
+      tags: ['api', 'vocabulary']
     },
     handler: testHandler
   }, {
@@ -33,7 +52,7 @@ const routes = [
     config: {
       description: 'Get vocabularies',
       notes: 'return an array of vocabulary object',
-      tags: ['api', 'vocabulary'], // ADD THIS TAG
+      tags: ['api', 'vocabulary'],
       validate: {
         query: {
           level: Joi.number().integer().min(0).max(6).default(0), // 0 means include all levels

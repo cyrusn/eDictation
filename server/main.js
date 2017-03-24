@@ -5,8 +5,10 @@ const HapiSwagger = require('hapi-swagger');
 
 const Pack = require('./package');
 const Config = require('./config');
-const Logging = require('./helper/logging');
+const Logging = require('./helper/good');
 const Routes = require('./api/route');
+
+const connectDB = require('./db/connect');
 
 const Port = Config.server.port;
 const Host = Config.server.host;
@@ -47,4 +49,5 @@ server.register([Logging, Inert, Vision, {
 
 server.start(function () {
   console.log('Server running at: ' + server.info.uri);
+  connectDB.connect();
 });

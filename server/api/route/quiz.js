@@ -2,29 +2,48 @@ const Joi = require('joi');
 const testHandler = require('../handler/test.js').test;
 const addPrefix = require('../../helper/func').addPrefix;
 
+const quizSchema = Joi.object({
+  id: Joi.string(),
+  vocabs: Joi.array().description('list of vocabulary id')
+});
+
+const resultSchema = Joi.object({
+  quiz_id: Joi.string(),
+  username: Joi.string(),
+  timestamp: Joi.date().timestamp(),
+  response: {
+    title: Joi.array().description('the array of question'),
+    answer: Joi.array().description('the array of answer')
+  }
+});
+
 const routes = [
   {
     method: 'POST',
     path: '/create',
     config: {
-      description: 'create the list of id of vocabularies for front end to create a quiz',
-      notes: 'backend only provide the list of vocabulary id, frontend will manange the logic part of quiz ',
+      description: 'create the list of vocab_id for front end to create a quiz',
+      notes: 'backend only provide the list of vocab_id, frontend will manange the logic part of quiz',
       tags: ['api', 'quiz'],
       validate: {
-        query: {
-          level: Joi.number().integer().min(0).max(6).default(0), // 0 means include all levels
-          limit: Joi.number().integer().default(0),
-          random: Joi.boolean()
-        }
+        payload: Joi.array().description('list of vocab_id')
       },
       response: {
-        schema: Joi.object({
-          id: Joi.string(),
-          vocabularies: Joi.array()
-        })
+        schema: quizSchema
       }
     },
-
+    handler: testHandler
+  }, {
+    method: 'POST',
+    path: '/{quiz_id}/edit',
+    config: {
+      description: 'edit the existance quiz',
+      notes: 'backend only provide the list of vocabulary id, frontend will manange the logic part of quiz ',
+      tags: ['api', 'quiz'],
+      response: {
+        schema: quizSchema
+      }
+    },
     handler: testHandler
   }, {
     method: 'POST',
@@ -36,10 +55,29 @@ const routes = [
     handler: testHandler
   }, {
     method: 'POST',
-    path: '/save',
+    path: '/{quiz_id}/save',
     config: {
       description: 'save the result of the quiz',
-      tags: ['api', 'quiz'] // ADD THIS TAG
+      tags: ['api', 'quiz'],
+      validate: {
+        payload: resultSchema
+      }
+    },
+    handler: testHandler
+  }, {
+    method: 'GET',
+    path: '/result',
+    config: {
+      description: 'get all the quiz reuslts',
+      tags: ['api', 'quiz'],
+      validate: {
+        query: {
+          quiz_id: Joi.string()
+        }
+      },
+      response: {
+        schema: Joi.array().items(resultSchema)
+      }
     },
     handler: testHandler
   }
