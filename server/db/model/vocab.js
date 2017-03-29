@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const Schema = require('mongoose').Schema;
 // const logger = require('../helper/logger');
 
-const vocabSchema = mongoose.Schema({
+const VocabSchema = Schema({
+  _creator: {type: String, required: true, unique: true, ref: 'User'},
   title: {type: String, required: true},
   phonetic: {type: String},
   definations: [{
@@ -16,8 +18,8 @@ const vocabSchema = mongoose.Schema({
 });
 
 const Model = {
-  name: 'Vocabulary',
-  schema: vocabSchema
+  name: 'Vocab',
+  schema: VocabSchema
 };
 
 module.exports = mongoose.model(Model.name, Model.schema);

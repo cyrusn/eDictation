@@ -9,6 +9,7 @@ const Logging = require('./helper/good');
 const Routes = require('./api/route');
 
 const connectDB = require('./db/connect');
+const logger = require('./helper/logger');
 
 const Port = Config.server.port;
 const Host = Config.server.host;
@@ -49,5 +50,7 @@ server.register([Logging, Inert, Vision, {
 
 server.start(function () {
   console.log('Server running at: ' + server.info.uri);
-  connectDB.connect();
+  connectDB(function () {
+    logger.info(`connected to db`);
+  });
 });

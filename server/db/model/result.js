@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
-// const logger = require('../helper/logger');
+const Schema = mongoose.Schema;
 
-const resultSchema = mongoose.Schema({
-  quiz: {type: String, ref: 'Quiz'}
+const ResultSchema = mongoose.Schema({
+  username: {type: String, required: true, unique: true, ref: 'User'},
+  quiz: {type: Schema.Types.ObjectId, ref: 'Quiz'},
+  response: [{
+    vocab_id: {type: Schema.Types.ObjectId, ref: 'Vocab'},
+    answer: {type: String}
+  }],
+  timestamp: {type: Date}
 });
 
 const Model = {
   name: 'Result',
-  schema: resultSchema
+  schema: ResultSchema
 };
 
 module.exports = mongoose.model(Model.name, Model.schema);

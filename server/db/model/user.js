@@ -3,15 +3,13 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-// const roles = ['admin', 'teacher', 'student'];
-
-const userSchema = mongoose.Schema({
-  username: {type: String, required: true},
-  // password: {type: String, required: true},
-  // name: {type: String, required: true},
-  // email: {type: String, required: true},
-  // role: {type: String, enum: roles},
-  vocabularies: [{type: Schema.Types.ObjectId, ref: 'Vocabulary'}]
+const userSchema = Schema({
+  username: {type: String, required: true, unique: true, ref: 'User'},
+  firstName: {type: String, required: true},
+  lastName: {type: String, required: true},
+  email: {type: String, required: true},
+  vocabularies: [{type: Schema.Types.ObjectId, ref: 'Vocab'}],
+  quiz: [{type: Schema.Types.ObjectId, ref: 'Quiz'}]
 });
 
 const Model = {

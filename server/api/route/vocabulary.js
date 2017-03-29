@@ -21,6 +21,17 @@ const vocabSchema = Joi.object({
 const routes = [
   {
     method: 'POST',
+    path: '/import',
+    config: {
+      description: 'import vocabularies for users',
+      tags: ['api', 'vocabulary'],
+      validate: {
+        payload: vocabSchema
+      }
+    },
+    handler: testHandler
+  }, {
+    method: 'POST',
     path: '/add',
     config: {
       description: 'Add vocabulary to database',
