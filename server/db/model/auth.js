@@ -23,19 +23,19 @@ AuthSchema.methods.isValid = function () {
   const authSchema = this;
   const password = authSchema.password;
 
-  return new Promise((resolve, reject) => {
-    const AuthModel = authSchema.model(Model.name);
-    AuthModel.findOne({
-      username: authSchema.username
-    }).then(function (result) {
-      if (!result) {
-        return reject(Boom.notFound(`${authSchema.username} is not registered`));
-      }
-      console.log(password, result.password);
-      bcrypt.compare(password, result.password).then(resolve);
-    }).catch((err) => {
-      return reject(Boom.badRequest(err));
-    });
+  const AuthModel = authSchema.model(Model.name);
+
+  const errorMessage = `${authSchema.username} is not registered`;
+
+  return AuthModel.findOne({
+    username: authSchema.username
+  }).then(function (result) {
+    if (!result) {
+      return Boom.notFound(errorMessage);
+    }
+    return bcrypt.compare(password, result.password);
+  }).catch((err) => {
+    return Boom.badRequest(err);
   });
 };
 

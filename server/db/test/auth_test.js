@@ -27,7 +27,7 @@ describe('AuthModel', () => {
     const models = users.map(user => AuthModel(user));
 
     models.forEach(function (model) {
-      it(`should save ${model.username} without error`, (done) => {
+      it(`should save ${model.username} without error`, done => {
         model.save(done);
       });
     });
@@ -38,9 +38,8 @@ describe('AuthModel', () => {
 
     models.forEach(function (model) {
       it(`should validate ${model.username}`, (done) => {
-        model.isValid().then(function (result) {
-          console.log(result.user, result.ok);
-          assert.ok(result.ok);
+        model.isValid().then(function (ok) {
+          assert.ok(ok);
           done();
         }).catch(done);
       });

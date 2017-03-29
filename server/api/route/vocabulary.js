@@ -58,6 +58,17 @@ const routes = [
     },
     handler: testHandler
   }, {
+    method: 'POST',
+    path: '/share',
+    config: {
+      description: 'share vocabularies to users',
+      tags: ['api', 'vocabulary'],
+      validate: {
+        payload: vocabSchema
+      }
+    },
+    handler: testHandler
+  }, {
     method: 'GET',
     path: '',
     config: {
