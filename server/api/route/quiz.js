@@ -35,6 +35,17 @@ const routes = [
     handler: testHandler
   }, {
     method: 'POST',
+    path: '/share',
+    config: {
+      description: 'share quiz to users',
+      tags: ['api', 'quiz'],
+      validate: {
+        payload: testHandler
+      }
+    },
+    handler: testHandler
+  }, {
+    method: 'POST',
     path: '/{quiz_id}/edit',
     config: {
       description: 'edit the existance quiz',

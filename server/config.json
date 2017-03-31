@@ -12,5 +12,10 @@
   "server": {
     "host": "localhost",
     "port": "5000"
+  },
+  "jwt": {
+    "key": "whip-behind-precept-oxymoron-uvula-needful-bribery",
+    "exp": "30m",
+    "algorithm": "HS256"
   }
 }

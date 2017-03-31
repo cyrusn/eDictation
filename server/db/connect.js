@@ -10,5 +10,5 @@ module.exports = function (cb) {
   mongoose.connect(`mongodb://localhost/${dbName}`);
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', cb);
+  db.once('open', cb.bind(null, dbName));
 };

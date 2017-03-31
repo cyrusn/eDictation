@@ -1,22 +1,34 @@
 const Joi = require('joi');
-const testHandler = require('../handler/test.js').test;
 const authHandler = require('../handler/auth.js');
 const addPrefix = require('../../helper/func').addPrefix;
 
 const routes = [{
   method: 'POST',
-  path: '/unregister',
+  path: '/sign',
   config: {
     description: 'unregister user',
     tags: ['api', 'auth'], // ADD THIS TAG
     validate: {
       payload: {
-        username: Joi.string().required().description('username'),
+        alias: Joi.string().required().description('username or email'),
         password: Joi.string().required().description('password')
       }
     }
   },
-  handler: authHandler.unregister
+  handler: authHandler.sign
+}, {
+  method: 'GET',
+  path: '/refresh',
+  config: {
+    description: 'Refresh JWT token',
+    tags: ['api', 'auth'], // ADD THIS TAG
+    validate: {
+      headers: Joi.object({
+        authorization: Joi.string()
+      }).description('jwt token in header').unknown()
+    }
+  },
+  handler: authHandler.refresh
 }, {
   method: 'POST',
   path: '/register',
@@ -36,27 +48,22 @@ const routes = [{
   handler: authHandler.register
 }, {
   method: 'POST',
-  path: '/login',
+  path: '/unregister',
   config: {
-    description: 'Sign for JWT token',
+    description: 'unregister user',
     tags: ['api', 'auth'], // ADD THIS TAG
+    auth: 'jwt',
     validate: {
-      params: {
-        username: Joi.string().required(),
-        password: Joi.string().required()
-      }
+      payload: {
+        alias: Joi.string().required().description('username or email'),
+        password: Joi.string().required().description('password')
+      },
+      headers: Joi.object({
+        authorization: Joi.string()
+      }).description('jwt token in header').unknown()
     }
   },
-  handler: testHandler
-}, {
-  method: 'POST',
-  path: '/refresh',
-  config: {
-    description: 'Refresh JWT token',
-    tags: ['api', 'auth'] // ADD THIS TAG
-  },
-  handler: testHandler
-}
-];
+  handler: authHandler.unregister
+}];
 
 module.exports = routes.map(addPrefix('/api/auth'));

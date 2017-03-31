@@ -33,23 +33,47 @@ describe('AuthAPI', () => {
   after(() => {
     const models = [ UserModel, AuthModel, VocabModel, ResultModel, QuizModel ];
     models.forEach(model => {
-      dbManager.dropCollection(AuthModel, err => {
+      dbManager.dropCollection(model, err => {
         if (err) return logger.error(err);
       });
     });
   });
 
+  describe('#sign()', function () {
+    const register = testFunction.register;
+    const sign = testFunction.sign;
+    const refresh = testFunction.refresh;
+
+    it('should sign and refresh JWT without error', done => {
+      register(user)
+      .then(sign.bind(null, user))
+      .then(result => {
+        console.log('token:\n', result);
+        return result.token;
+      })
+      .then(token => {
+        setTimeout(function () {
+          refresh(token).then(newToken => {
+            console.log('new token:\n', newToken);
+            done();
+          });
+        }, 1500);
+      });
+    });
+  });
+
   describe('#register', () => {
-    it('should register an user without error', (done) => {
-      testFunction.register(user).then(() => {
+    it('should register an user without error', done => {
+      testFunction.register(user).then(result => {
         done();
       }, done);
     });
   });
 
   describe('#unregister()', () => {
-    it('should unregister an user without error', (done) => {
-      testFunction.unregister(user).then(() => {
+    it('should unregister an user without error', done => {
+      const unregister = testFunction.unregister;
+      unregister(user).then(() => {
         done();
       }, done);
     });

@@ -1,4 +1,7 @@
+const logger = require('../../helper/logger');
 const Boom = require('boom');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const UserModel = require('../../db/model/user');
 const AuthModel = require('../../db/model/auth');
@@ -6,47 +9,120 @@ const VocabModel = require('../../db/model/vocab');
 const ResultModel = require('../../db/model/result');
 const QuizModel = require('../../db/model/quiz');
 
+const JWTConfig = require('../../config').jwt;
+const KEY = JWTConfig.key;
+const EXP = JWTConfig.exp;
+const ALGORITHM = JWTConfig.algorithm;
+
+const JWTOption = {
+  expiresIn: EXP,
+  algorithm: ALGORITHM
+};
+
 module.exports = {
   register: (request, reply) => {
     const user = request.payload;
     register(user).then(reply, reply);
   },
   unregister: (request, reply) => {
-    const user = request.payload;
-    unregister(user).then(reply, reply);
+    const validator = request.payload;
+    unregister(validator).then(reply, reply);
+  },
+  sign: (request, reply) => {
+    const validator = request.payload;
+    sign(validator).then(reply, reply);
+  },
+  refresh: (request, reply) => {
+    const headers = request.headers;
+    refresh(headers.authorization).then(reply, reply);
   }
 };
 
 module.exports.test = {
-  register, unregister
+  register, unregister, sign, refresh
 };
 
-function unregister (user) {
-    // check user identity before unregister
-  const username = user.username;
-
-  const authModel = new AuthModel({
-    username: username,
-    password: user.password
+function refresh (token) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, KEY, function (err, decoded) {
+      if (err) {
+        return reject(Boom.badRequest(err));
+      }
+      const newToken = jwt.sign({data: decoded.data}, KEY, JWTOption);
+      return resolve({
+        token: newToken
+      });
+    });
   });
+}
 
-  return authModel
-    .isValid()
-    .then(ok => {
-      if (ok) return removeUserInAllCollections(username);
-      return (Boom.unauthorized('Incorrect password.'));
+function sign (validator) {
+  const errNotFoundMessage = Boom.unauthorized();
+  return validate(validator)
+    .then(user => {
+      // logger.info(user);
+      if (!user) return Promise.reject(errNotFoundMessage);
+      const token = jwt.sign(user._doc, KEY, JWTOption);
+      return {token};
     });
 }
 
-function removeUserInAllCollections (username) {
+// validator have alias and password key
+function unregister (validator) {
+  const successMessage = {
+    message: `${validator.alias} is unregistered`
+  };
+
+  return validate(validator)
+    .then(result => {
+      if (!result) throw Boom.unauthorized('Incorrect password.');
+      return removeUserInAllCollections(result._id);
+    })
+    .then(result => {
+      return successMessage;
+    });
+}
+
+function convertUserAliasToQuery (alias) {
+  const emailReg = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const isEmail = emailReg.test(alias);
+
+  if (isEmail) return {email: alias};
+  return {username: alias};
+}
+
+function validate (validator) {
+  const errNotFoundMessage = Boom.notFound(`${validator.alias} not found.`);
+  const query = convertUserAliasToQuery(validator.alias);
+  // validate user by "(username | email) + password"
+  return UserModel.findOne(query)
+      .select('-__v -vocabularies -friends -quizzes')
+      .then(user => {
+        if (!user) return Promise.reject(errNotFoundMessage);
+        return user;
+      })
+      .then(user => {
+        return AuthModel
+        .findOne({userid: user._id})
+        .then(auth => {
+          return bcrypt.compare(validator.password, auth.password);
+        })
+        .then(ok => {
+          if (ok) return Promise.resolve(user);
+          return Promise.resolve(null);
+        });
+      });
+}
+
+function removeUserInAllCollections (userid) {
   const collections = [{
-    path: 'username',
+    path: '_id',
     model: UserModel
   }, {
-    path: 'username',
+    path: 'userid',
     model: AuthModel
   }, {
-    path: 'username',
+    path: 'userid',
     model: ResultModel
   }, {
     path: '_creator',
@@ -56,51 +132,39 @@ function removeUserInAllCollections (username) {
     model: VocabModel
   }];
 
-  const successMessage = {
-    message: `${username} is unregistered successfully.`
-  };
-
   return Promise.all(collections.map(collection => {
-    // create a query object that contain information of given username
     const query = {};
-    query[collection.path] = username;
-    return collection.model
-      .remove(query);
-  })).then(() => {
-    return successMessage;
-  }, console.error);
+    query[collection.path] = userid;
+    const Model = collection.model;
+
+    return Model.remove(query);
+  }));
 }
 
 function register (user) {
   const userObj = Object.assign({}, user);
   delete userObj.password;
 
-  const username = user.username;
-  const authObj = {
-    username: username,
-    password: user.password
-  };
-
-  const collections = [
-    {
-      model: AuthModel,
-      newUser: authObj
-    }, {
-      model: UserModel,
-      newUser: userObj
-    }];
+  const userModel = UserModel(userObj);
 
   const successMessage = {
-    message: `${username} is registered successfully`
+    message: `${user.username} is registered successfully`
   };
 
-  return Promise.all(collections.map(function (collection) {
-    const Model = collection.model;
-    const instance = new Model(collection.newUser);
-    return instance.save();
-  })).then(() => {
-    return successMessage;
-  }, err => {
-    return Boom.badRequest(err);
-  });
+  return userModel
+    .save()
+    .then(result => {
+      const authObj = {
+        userid: result._id,
+        password: user.password
+      };
+
+      const authModel = AuthModel(authObj);
+      return authModel.save();
+    })
+    .then(() => {
+      return successMessage;
+    }, err => {
+      return Promise.reject(Boom.badRequest(err));
+    });
 }

@@ -2,6 +2,8 @@ const Hapi = require('hapi');
 const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
+const HapiJWT = require('hapi-auth-jwt2');
+const process = require('process');
 
 const Pack = require('./package');
 const Config = require('./config');
@@ -15,6 +17,9 @@ const Port = Config.server.port;
 const Host = Config.server.host;
 const PublicPath = Config.public.path;
 
+const KEY = Config.jwt.key;
+const ALGORITHM = Config.jwt.algorithm;
+
 const server = new Hapi.Server({
   connections: {
     routes: {
@@ -24,6 +29,16 @@ const server = new Hapi.Server({
     }
   }
 });
+
+const validate = function (decoded, request, cb) {
+  // console.log(decoded);
+  // validate user first
+  const valid = true;
+  if (valid) {
+    return cb(null, true);
+  }
+  return cb(null, false);
+};
 
 const SwaggerOptions = {
   info: {
@@ -39,18 +54,25 @@ server.connection({
   host: Host
 });
 
-server.register([Logging, Inert, Vision, {
+server.register([Logging, Inert, Vision, HapiJWT, {
   'register': HapiSwagger,
   'options': SwaggerOptions
 }], (err) => {
   if (err) return;
 
+  server.auth.strategy('jwt', 'jwt', {
+    key: KEY,
+    validateFunc: validate,
+    verifyOptions: { algorithms: [ ALGORITHM ] }
+  });
+
   server.route(Routes);
 });
 
 server.start(function () {
-  console.log('Server running at: ' + server.info.uri);
-  connectDB(function () {
-    logger.info(`connected to db`);
+  logger.info(`ENV: ${process.env.NODE_ENV}`);
+  logger.info('Server running at: ' + server.info.uri);
+  connectDB(function (dbName) {
+    logger.info(`connected to db [${dbName}]`);
   });
 });

@@ -2,19 +2,14 @@ const mongoose = require('mongoose');
 const Schema = require('mongoose').Schema;
 // const logger = require('../helper/logger');
 
+const defination = require('./defination');
+
 const VocabSchema = Schema({
-  _creator: {type: String, required: true, unique: true, ref: 'User'},
+  _creator: {type: Schema.Types.ObjectId, required: true, unique: true, ref: 'User'},
   title: {type: String, required: true},
+  level: {type: Number, required: true},
   phonetic: {type: String},
-  definations: [{
-    partOfSpeech: {type: String},
-    eng: {type: String},
-    chi: {type: String},
-    examples: [{
-      text: {type: String},
-      translation: {type: String}
-    }]
-  }]
+  definations: [defination]
 });
 
 const Model = {

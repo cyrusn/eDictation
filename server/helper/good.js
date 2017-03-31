@@ -2,10 +2,13 @@
 const Good = require('good');
 const LogFileConfig = require('../config.json').log;
 const Path = require('path');
+const logger = require('../helper/logger');
 
 const FilePath = Path.resolve(__dirname, '../', LogFileConfig.path, LogFileConfig.name);
 
-console.log(`Log file Path: ${FilePath}`);
+const displayPath = Path.relative(Path.resolve(__dirname, '../'), FilePath);
+
+logger.info(`Log file Path: ${displayPath}`);
 
 module.exports = {
   register: Good,

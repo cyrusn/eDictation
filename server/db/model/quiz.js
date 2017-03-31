@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 // const logger = require('../helper/logger');
 
 const QuizSchema = mongoose.Schema({
-  _creator: {type: String, required: true, unique: true, ref: 'User'},
+  _creator: {type: Schema.Types.ObjectId, required: true, unique: true, ref: 'User'},
   name: {type: String, required: true, unique: true},
   vocabularies: [{type: Schema.Types.ObjectId, ref: 'Vocab'}]
 });

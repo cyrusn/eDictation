@@ -64,7 +64,7 @@ const routes = [
       description: 'share vocabularies to users',
       tags: ['api', 'vocabulary'],
       validate: {
-        payload: vocabSchema
+        payload: [vocabSchema]
       }
     },
     handler: testHandler
