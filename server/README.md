@@ -30,18 +30,12 @@
 ## Use JWT for authetication
 - save to header, using a short live token
 - [JSON Web Tokens - jwt.io](https://jwt.io/)
+-
 
-# LevelDB as Database
-- [GitHub - Level/levelup: LevelDB - Node.js style](https://github.com/Level/levelup)
+# MongoDB as Database / Mongoose as node.js drive
+- [Mongoose Quick Start v4.9.2](http://mongoosejs.com/docs/index.html)
 
-# Vocabulary Schema
+# Features
+## Vocabularies
 - `level`: 1 - 5 ranking, 5 is the most difficult wording
-
-``` json
-[{
-	"level": 1,
-	"chinese": "你好",
-	"english": "hello",
-	"example": "hello, how are you."
-}]
-```
+-

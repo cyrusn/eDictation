@@ -60,7 +60,6 @@ function sign (validator) {
   const errNotFoundMessage = Boom.unauthorized();
   return validate(validator)
     .then(user => {
-      // logger.info(user);
       if (!user) return Promise.reject(errNotFoundMessage);
       const token = jwt.sign(user._doc, KEY, JWTOption);
       return {token};
@@ -94,24 +93,24 @@ function convertUserAliasToQuery (alias) {
 function validate (validator) {
   const errNotFoundMessage = Boom.notFound(`${validator.alias} not found.`);
   const query = convertUserAliasToQuery(validator.alias);
-  // validate user by "(username | email) + password"
+
   return UserModel.findOne(query)
-      .select('-__v -vocabularies -friends -quizzes')
-      .then(user => {
-        if (!user) return Promise.reject(errNotFoundMessage);
-        return user;
+    .select('-__v -vocabularies -friends -quizzes')
+    .then(user => {
+      if (!user) return Promise.reject(errNotFoundMessage);
+      return user;
+    })
+    .then(user => {
+      return AuthModel
+      .findOne({userid: user._id})
+      .then(auth => {
+        return bcrypt.compare(validator.password, auth.password);
       })
-      .then(user => {
-        return AuthModel
-        .findOne({userid: user._id})
-        .then(auth => {
-          return bcrypt.compare(validator.password, auth.password);
-        })
-        .then(ok => {
-          if (ok) return Promise.resolve(user);
-          return Promise.resolve(null);
-        });
+      .then(ok => {
+        if (ok) return Promise.resolve(user);
+        return Promise.resolve(null);
       });
+    });
 }
 
 function removeUserInAllCollections (userid) {
