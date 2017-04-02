@@ -1,11 +1,11 @@
 // Connect to mongodb throught mongoose
 const mongoose = require('mongoose');
-const dbName = require('../config').db.name;
-
-// reference: mpromise is depreciated, therefore have to plugin an own-promises-library
-// http://mongoosejs.com/docs/promises.html#plugging-in-your-own-promises-library
+const Config = require('../helper/config').get();
+const dbName = Config.db.name;
 
 module.exports = function (cb) {
+  // reference: mpromise is depreciated, therefore have to plugin an own-promises-library
+  // http://mongoosejs.com/docs/promises.html#plugging-in-your-own-promises-library
   mongoose.Promise = global.Promise;
   mongoose.connect(`mongodb://localhost/${dbName}`);
   const db = mongoose.connection;

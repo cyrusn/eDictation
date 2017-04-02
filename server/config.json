@@ -1,6 +1,6 @@
 {
   "db": {
-    "name": "test"
+    "name": "eDictation"
   },
   "public": {
     "path": "../public"
@@ -14,7 +14,7 @@
     "port": "5000"
   },
   "jwt": {
-    "key": "whip-behind-precept-oxymoron-uvula-needful-bribery",
+    "key": "change the jwt key on production",
     "exp": "30m",
     "algorithm": "HS256"
   }

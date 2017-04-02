@@ -6,7 +6,7 @@ const HapiJWT = require('hapi-auth-jwt2');
 const process = require('process');
 
 const Pack = require('./package');
-const Config = require('./config');
+const Config = require('./helper/config').get();
 const Logging = require('./helper/good');
 const Routes = require('./api/route');
 
@@ -70,7 +70,7 @@ server.register([Logging, Inert, Vision, HapiJWT, {
 });
 
 server.start(function () {
-  logger.info(`ENV: ${process.env.NODE_ENV}`);
+  logger.info(`NODE_ENV: ${process.env.NODE_ENV}`);
   logger.info('Server running at: ' + server.info.uri);
   connectDB(function (dbName) {
     logger.info(`connected to db [${dbName}]`);

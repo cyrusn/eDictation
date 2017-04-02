@@ -10,19 +10,19 @@ describe('UserModel', () => {
       username: 'cyrusn',
       firstName: 'Cyrus',
       lastName: 'Ngan',
-      email: 'cyrusn@gmail.com'
+      email: 'user1@gmail.com'
     },
     {
       username: 'winniec',
       firstName: 'Winnie',
       lastName: 'Chan',
-      email: 'winniec@gmail.com'
+      email: 'user2@gmail.com'
     },
     {
       username: 'alvinn',
       firstName: 'Alvin',
       lastName: 'Ngan',
-      email: 'alvinn@gmail.com'
+      email: 'user3@gmail.com'
     }
   ];
 
