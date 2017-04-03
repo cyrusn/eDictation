@@ -1,4 +1,4 @@
-const logger = require('../../helper/logger');
+// const logger = require('../../helper/logger');
 const Boom = require('boom');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');

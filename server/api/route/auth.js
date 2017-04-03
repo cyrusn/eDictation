@@ -20,6 +20,7 @@ const routes = [{
   method: 'GET',
   path: '/refresh',
   config: {
+    auth: 'jwt',
     description: 'Refresh JWT token',
     tags: ['api', 'auth'], // ADD THIS TAG
     validate: {
@@ -47,7 +48,7 @@ const routes = [{
   },
   handler: authHandler.register
 }, {
-  method: 'POST',
+  method: 'DELETE',
   path: '/unregister',
   config: {
     description: 'unregister user',

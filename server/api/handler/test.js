@@ -1,7 +1,10 @@
+const jwt = require('jsonwebtoken');
+
 module.exports = {
   test: (request, reply) => {
-    return reply({
-      message: 'hello world'
-    });
+    const token = request.headers.authorization;
+    console.log(token);
+    const decoded = jwt.decode(token);
+    return reply(decoded);
   }
 };

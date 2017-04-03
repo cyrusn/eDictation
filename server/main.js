@@ -2,10 +2,9 @@ const Hapi = require('hapi');
 const Inert = require('inert');
 const Vision = require('vision');
 const HapiSwagger = require('hapi-swagger');
-const HapiJWT = require('hapi-auth-jwt2');
+const JWTAuth = require('hapi-auth-jwt2');
 const process = require('process');
 
-const Pack = require('./package');
 const Config = require('./helper/config').get();
 const Logging = require('./helper/good');
 const Routes = require('./api/route');
@@ -30,42 +29,43 @@ const server = new Hapi.Server({
   }
 });
 
+const UserModel = require('./db/model/user');
 const validate = function (decoded, request, cb) {
-  // console.log(decoded);
-  // validate user first
-  const valid = true;
-  if (valid) {
+  logger.warn(decoded);
+  return UserModel.findOne({
+    _id: decoded.id
+  })
+  .then(user => {
+    if (!user) return cb(null, false);
+    return user;
+  }, cb)
+  .then(user => {
     return cb(null, true);
-  }
-  return cb(null, false);
+  });
 };
 
-const SwaggerOptions = {
-  info: {
-    'title': 'eDictation API Documentation',
-    'version': Pack.version
-  },
-  basePath: '/api',
-  pathPrefixSize: 2
-};
+const SwaggerOptions = Config.SwaggerOptions;
 
 server.connection({
   port: Port,
   host: Host
 });
 
-server.register([Logging, Inert, Vision, HapiJWT, {
+server.register(JWTAuth, function (err) {
+  if (err) return console.error(err);
+  server.auth.default('jwt');
+});
+server.auth.strategy('jwt', 'jwt', {
+  key: KEY,
+  validateFunc: validate,
+  verifyOptions: { algorithms: [ ALGORITHM ] }
+});
+
+server.register([Logging, Inert, Vision, {
   'register': HapiSwagger,
   'options': SwaggerOptions
 }], (err) => {
-  if (err) return;
-
-  server.auth.strategy('jwt', 'jwt', {
-    key: KEY,
-    validateFunc: validate,
-    verifyOptions: { algorithms: [ ALGORITHM ] }
-  });
-
+  if (err) return console.error(err);
   server.route(Routes);
 });
 

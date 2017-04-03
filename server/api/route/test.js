@@ -1,21 +1,20 @@
 const testHandler = require('../handler/test.js').test;
-const Joi = require('joi');
 
-module.exports = [
+const helperFunc = require('../../helper/func');
+const addPrefix = helperFunc.addPrefix;
+const enableJWT = helperFunc.enableJWT;
+
+const routes = [
   {
     method: 'GET',
-    path: '/api/test',
+    path: '/',
     config: {
-      auth: 'jwt',
       description: 'Simple Test API',
-      notes: 'Return a simple JSON with message "Hello World',
+      notes: 'Return a decoded jwt token data',
       tags: ['api', 'test'], // ADD THIS TAG
-      handler: testHandler,
-      validate: {
-        headers: Joi.object({
-          authorization: Joi.string().required()
-        }).unknown()
-      }
+      handler: testHandler
     }
   }
 ];
+
+module.exports = routes.map(addPrefix('/api/test')).map(enableJWT);

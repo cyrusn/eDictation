@@ -1,5 +1,6 @@
 const process = require('process');
 const production = require('../config');
+const Pack = require('../package');
 
 const config = {
   production,
@@ -22,6 +23,14 @@ const config = {
       'key': 'whip-behind-precept-oxymoron-uvula-needful-bribery',
       'exp': '30m',
       'algorithm': 'HS256'
+    },
+    swaggerOption: {
+      info: {
+        'title': 'eDictation API Documentation',
+        'version': Pack.version
+      },
+      basePath: '/api',
+      pathPrefixSize: 2
     }
   }
 };

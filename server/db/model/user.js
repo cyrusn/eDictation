@@ -16,7 +16,10 @@ const UserSchema = Schema({
     definations: [defination]
   }],
   quizzes: [{type: Schema.Types.ObjectId, ref: 'Quiz'}],
-  friends: [{type: Schema.Types.ObjectId, ref: 'User'}]
+  friendLists: [{
+    name: {type: String, required: true, default: 'friends'},
+    users: [{type: Schema.Types.ObjectId, ref: 'User'}]
+  }]
 });
 
 const Model = {

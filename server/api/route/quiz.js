@@ -1,6 +1,9 @@
 const Joi = require('joi');
 const testHandler = require('../handler/test.js').test;
-const addPrefix = require('../../helper/func').addPrefix;
+
+const helperFunc = require('../../helper/func');
+const addPrefix = helperFunc.addPrefix;
+const enableJWT = helperFunc.enableJWT;
 
 const quizSchema = Joi.object({
   id: Joi.string(),
@@ -12,8 +15,8 @@ const resultSchema = Joi.object({
   username: Joi.string(),
   timestamp: Joi.date().timestamp(),
   response: {
-    title: Joi.array().description('the array of question'),
-    answer: Joi.array().description('the array of answer')
+    title: Joi.array().items(Joi.string()).description('the array of question'),
+    answer: Joi.array().items(Joi.string()).description('the array of answer')
   }
 });
 
@@ -94,4 +97,4 @@ const routes = [
   }
 ];
 
-module.exports = routes.map(addPrefix('/api/quiz'));
+module.exports = routes.map(addPrefix('/api/quizzes')).map(enableJWT);
