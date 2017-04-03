@@ -7,7 +7,7 @@ const enableJWT = helperFunc.enableJWT;
 const routes = [
   {
     method: 'GET',
-    path: '/',
+    path: '',
     config: {
       description: 'Simple Test API',
       notes: 'Return a decoded jwt token data',

@@ -9,7 +9,8 @@ const VocabModel = require('../../db/model/vocab');
 const ResultModel = require('../../db/model/result');
 const QuizModel = require('../../db/model/quiz');
 
-const JWTConfig = require('../../config').jwt;
+const Config = require('../../helper/config')();
+const JWTConfig = Config.jwt;
 const KEY = JWTConfig.key;
 const EXP = JWTConfig.exp;
 const ALGORITHM = JWTConfig.algorithm;
@@ -58,7 +59,7 @@ function refresh (token) {
 
 function sign (validator) {
   const errNotFoundMessage = Boom.unauthorized();
-  return validate(validator)
+  return authorize(validator)
     .then(user => {
       if (!user) return Promise.reject(errNotFoundMessage);
       const token = jwt.sign(user._doc, KEY, JWTOption);
@@ -72,7 +73,7 @@ function unregister (validator) {
     message: `${validator.alias} is unregistered`
   };
 
-  return validate(validator)
+  return authorize(validator)
     .then(result => {
       if (!result) throw Boom.unauthorized('Incorrect password.');
       return removeUserInAllCollections(result._id);
@@ -83,19 +84,19 @@ function unregister (validator) {
 }
 
 function convertUserAliasToQuery (alias) {
-  const emailReg = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  const isEmail = emailReg.test(alias);
+  const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const isEmail = emailRegExp.test(alias);
 
   if (isEmail) return {email: alias};
   return {username: alias};
 }
 
-function validate (validator) {
+function authorize (validator) {
   const errNotFoundMessage = Boom.notFound(`${validator.alias} not found.`);
   const query = convertUserAliasToQuery(validator.alias);
 
   return UserModel.findOne(query)
-    .select('-__v -vocabularies -friends -quizzes')
+    .select('-__v -vocabularies -friends -quizzes -customizations -friendLists')
     .then(user => {
       if (!user) return Promise.reject(errNotFoundMessage);
       return user;

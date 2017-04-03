@@ -1,9 +1,10 @@
 // good is hapiJS logging pluggin
 const Good = require('good');
-const LogFileConfig = require('../helper/config').get().log;
 const Path = require('path');
 const logger = require('../helper/logger');
+const Config = require('../helper/config')();
 
+const LogFileConfig = Config.log;
 const FilePath = Path.resolve(__dirname, '../', LogFileConfig.path, LogFileConfig.name);
 
 const displayPath = Path.relative(Path.resolve(__dirname, '../'), FilePath);

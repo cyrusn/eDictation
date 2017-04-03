@@ -1,6 +1,6 @@
 // Connect to mongodb throught mongoose
 const mongoose = require('mongoose');
-const Config = require('../helper/config').get();
+const Config = require('../helper/config')();
 const dbName = Config.db.name;
 
 module.exports = function (cb) {

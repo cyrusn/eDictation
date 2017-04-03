@@ -6,11 +6,12 @@ password="hello world"
 path=":5000/api/auth/sign"
 
 
-token=$(http -b --session=${userFile} ${path} "alias"="$userAlias" password="$password" | jq .token)
+tokenJSON=$(http -b --session=${userFile} ${path} "alias"="$userAlias" password="$password" | jq .)
 
-echo $token
+echo $tokenJSON
+
+token=$(echo ${tokenJSON} | jq .token)
 
 cat ${userFile} | jq ".headers.authorization=${token}" > ${tempFile}
 cat ${tempFile} > ${userFile}
 \rm ${tempFile}
-
