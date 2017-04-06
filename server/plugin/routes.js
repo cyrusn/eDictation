@@ -1,6 +1,10 @@
 const _ = require('lodash');
 const Joi = require('joi');
 
+const ADMIN = 'admin';
+const TEACHER = 'teacher';
+const STUDENT = 'student';
+
 const settings = [{
   routes: require('../api/route/publicFolder'),
   prefix: '/',
@@ -8,27 +12,22 @@ const settings = [{
 }, {
   routes: require('../api/route/test'),
   prefix: '/api/test',
-  auth: true
+  auth: true,
+  scope: [ADMIN, TEACHER, STUDENT]
 }, {
   routes: require('../api/route/auth'),
   prefix: '/api/auth',
   auth: false
 }, {
-  routes: require('../api/route/user'),
-  prefix: '/api/user',
-  auth: true
+  routes: require('../api/route/teacher'),
+  prefix: '/api/teacher',
+  auth: true,
+  scope: [ADMIN, TEACHER]
 }, {
-  routes: require('../api/route/friend'),
-  prefix: '/api/user/friend',
-  auth: true
-}, {
-  routes: require('../api/route/vocab'),
-  prefix: '/api/vocabularies',
-  auth: true
-}, {
-  routes: require('../api/route/quiz'),
-  prefix: '/api/quizzes',
-  auth: true
+  routes: require('../api/route/student'),
+  prefix: '/api/student',
+  auth: true,
+  scope: [STUDENT]
 }];
 
 function register (server, options, next) {
@@ -64,8 +63,14 @@ function prefixize (prefix) {
 }
 
 // set config.auth to jwt
-function enableJWT (route) {
-  route.config.auth = 'jwt';
+function enableJWT (setting, route) {
+  if (!setting.auth) return route;
+
+  route.config.auth = {
+    strategy: 'jwt',
+    scope: setting.scope
+  };
+
   const validate = route.config.validate || {};
 
   validate.headers = Joi.object({
@@ -77,10 +82,7 @@ function enableJWT (route) {
 }
 
 function parseSetting (setting) {
-  const prefixed = setting.routes.map(prefixize(setting.prefix));
-  if (!setting.auth) {
-    return prefixed;
-  }
+  const prefixedRoute = setting.routes.map(prefixize(setting.prefix));
 
-  return prefixed.map(enableJWT);
+  return prefixedRoute.map(enableJWT.bind(null, setting));
 }

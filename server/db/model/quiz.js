@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Schema = require('mongoose').Schema;
 // const logger = require('../helper/logger');
 
-const QuizSchema = mongoose.Schema({
-  _creator: {type: Schema.Types.ObjectId, required: true, unique: true, ref: 'User'},
-  name: {type: String, required: true, unique: true},
-  vocabularies: [{type: Schema.Types.ObjectId, ref: 'Vocab'}]
+const QuizSchema = Schema({
+  _creator: {type: Schema.Types.ObjectId, required: true, ref: 'User'},
+  name: {type: String, required: true},
+  vocabs: [{type: Schema.Types.ObjectId, ref: 'Vocab'}],
+  targets: [{type: Schema.Types.ObjectId, ref: 'User'}]
 });
 
 const Model = {
