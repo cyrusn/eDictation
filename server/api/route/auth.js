@@ -1,13 +1,12 @@
 const Joi = require('joi');
 const authHandler = require('../handler/auth.js');
-const addPrefix = require('../../helper/func').addPrefix;
 
-const routes = [{
+module.exports = [{
   method: 'POST',
   path: '/sign',
   config: {
     description: 'unregister user',
-    tags: ['api', 'auth'], // ADD THIS TAG
+    tags: ['api', 'auth'],
     validate: {
       payload: {
         alias: Joi.string().required().description('username or email'),
@@ -22,7 +21,7 @@ const routes = [{
   config: {
     auth: 'jwt',
     description: 'Refresh JWT token',
-    tags: ['api', 'auth'], // ADD THIS TAG
+    tags: ['api', 'auth'],
     validate: {
       headers: Joi.object({
         authorization: Joi.string()
@@ -35,7 +34,7 @@ const routes = [{
   path: '/register',
   config: {
     description: 'register user',
-    tags: ['api', 'auth'], // ADD THIS TAG
+    tags: ['api', 'auth'],
     validate: {
       payload: {
         username: Joi.string().required().description('username'),
@@ -52,7 +51,7 @@ const routes = [{
   path: '/unregister',
   config: {
     description: 'unregister user',
-    tags: ['api', 'auth'], // ADD THIS TAG
+    tags: ['api', 'auth'],
     auth: 'jwt',
     validate: {
       payload: {
@@ -66,5 +65,3 @@ const routes = [{
   },
   handler: authHandler.unregister
 }];
-
-module.exports = routes.map(addPrefix('/api/auth'));

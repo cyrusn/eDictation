@@ -1,46 +1,42 @@
 const Hapi = require('hapi');
-const Inert = require('inert');
-const Vision = require('vision');
-const Process = require('process');
 
-const Logging = require('./helper/good');
-const logger = require('./helper/logger');
-
-const Routes = require('./api/route');
+const process = require('process');
 const connectDB = require('./db/connect');
 
-const Swagger = require('./helper/swagger');
-const JWTAuth = require('./helper/jwtAuth');
+// hapi plugin
+const Inert = require('inert');
+const Vision = require('vision');
+const JWT = require('./plugin/jwt');
+const Logging = require('./plugin/good');
+const Routes = require('./plugin/routes');
+const Swagger = require('./plugin/swagger');
 
+const logger = require('./helper/logger');
 const Config = require('./helper/config')();
-const Port = Config.server.port;
-const Host = Config.server.host;
-const PublicPath = Config.public.path;
 
 const server = new Hapi.Server({
   connections: {
     routes: {
-      files: {
-        relativeTo: PublicPath
-      }
-    }
-  }
+      files: { relativeTo: Config.public.path }
+    }}
 });
 
 server.connection({
-  port: Port,
-  host: Host
+  port: Config.server.port,
+  host: Config.server.host
 });
 
-server.register([Logging, Inert, Vision, JWTAuth, Swagger], (err) => {
-  if (err) return console.error(err);
-  server.route(Routes);
-});
+server.register([
+  Logging, Inert, Vision, JWT, Swagger, Routes
+],
+ err => {
+   if (err) return console.error(err);
+ });
 
 server.start(function () {
-  logger.info(`NODE_ENV: ${Process.env.NODE_ENV}`);
+  logger.info(`NODE_ENV: ${process.env.NODE_ENV}`);
   logger.info('Server running at: ' + server.info.uri);
   connectDB(function (dbName) {
-    logger.info(`connected to db [${dbName}]`);
+    logger.info(`Connected to DB: [${dbName}]`);
   });
 });

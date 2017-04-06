@@ -5,10 +5,14 @@ const Schema = require('mongoose').Schema;
 const defination = require('./defination');
 
 const VocabSchema = Schema({
-  _creator: {type: Schema.Types.ObjectId, required: true, unique: true, ref: 'User'},
+  _creator: {type: Schema.Types.ObjectId, required: true, ref: 'User'},
   title: {type: String, required: true},
-  tags: [{type: String, lowercase: true, trim: true, index: true}],
-  level: {type: Number, required: true, min: 1, max: 5},
+  tags: [{type: String,
+    lowercase: true,
+    trim: true,
+    index: false
+  }],
+  level: {type: Number, min: 1, max: 5, default: 1},
   phonetic: {type: String},
   definations: [defination]
 });

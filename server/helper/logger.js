@@ -19,7 +19,7 @@ const logger = tracer.colorConsole({
       error: format + '\nCall Stack:\n{{stack}}' // error format
     }
   ],
-  dateformat: 'yyyy.mm.dd HH:MM:ss.L',
+  dateformat: 'yyyy-mm-dd HH:MM:ss.L',
   preprocess: function (data) {
     data.title = data.title[0].toUpperCase();
   },

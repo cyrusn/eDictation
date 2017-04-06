@@ -12,6 +12,6 @@
     "cookies": {},
     "headers": {
         "Accept": "application/json, */*",
-        "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkN5cnVzTiIsImxhc3ROYW1lIjoiTmdhbiIsImZpcnN0TmFtZSI6IkN5cnVzIiwiZW1haWwiOiJjeXJ1c25jeUBnbWFpbC5jb20iLCJfaWQiOiI1OGUxZDgyODNmNTE5YjNiODFkOWZmNmIiLCJpYXQiOjE0OTEyMzQ1OTQsImV4cCI6MTQ5MTIzNjM5NH0.8GmOa1nEBgXW-fQrD9jq_RhCfNRrelz7WXsD_4Luy0c"
+        "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkN5cnVzTiIsImxhc3ROYW1lIjoiTmdhbiIsImZpcnN0TmFtZSI6IkN5cnVzIiwiZW1haWwiOiJjeXJ1c25jeUBnbWFpbC5jb20iLCJfaWQiOiI1OGU0N2U4NTczOWJkOWZhZjMyZjAzYTEiLCJpYXQiOjE0OTE0Mzk5MDEsImV4cCI6MTQ5MTQ0MTcwMX0.mWTPWYDDNyGqB_7bkATWTZRT1hBR9KKn-4XCAdWtmWc"
     }
 }
