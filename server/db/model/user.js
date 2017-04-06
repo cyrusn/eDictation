@@ -1,25 +1,29 @@
 const mongoose = require('mongoose');
-// const logger = require('../helper/logger');
+const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 
-const defination = require('./defination');
-
 const UserSchema = Schema({
-  username: {type: String, required: true, unique: true},
-  email: {type: String, required: true, unique: true},
-  firstName: {type: String, required: true},
-  lastName: {type: String, required: true},
-  vocabularies: [{type: Schema.Types.ObjectId, ref: 'Vocab'}],
-  customizations: [{
-    vocabid: {type: Schema.Types.ObjectId, ref: 'Vocab'},
-    definations: [defination]
-  }],
-  quizzes: [{type: Schema.Types.ObjectId, ref: 'Quiz'}],
-  friendLists: [{
-    name: {type: String, required: true, default: 'friends'},
-    users: [{type: Schema.Types.ObjectId, ref: 'User'}]
+  username: {type: String, required: true, unique: true, index: true},
+  password: {type: String, required: true},
+  role: {type: String, required: true, enum: ['student', 'teacher', 'admin']},
+  ename: {type: String, required: true},
+  cname: {type: String},
+  cohorts: [{
+    schoolYear: {type: String},
+    classCode: {type: String},
+    classNo: {type: Number}
   }]
+});
+
+UserSchema.pre('save', function (next) {
+  var that = this;
+  const saltRounds = 10;
+  bcrypt.hash(that.password, saltRounds)
+  .then(function (hash) {
+    that.password = hash;
+    next();
+  }, next);
 });
 
 const Model = {
