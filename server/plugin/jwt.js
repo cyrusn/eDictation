@@ -27,13 +27,13 @@ const scheme = function (server, options) {
   };
 };
 
-exports.register = function (server, options, next) {
+module.exports.register = function (server, options, next) {
   server.auth.scheme('jwt', scheme);
   server.auth.strategy('jwt', 'jwt');
   next();
 };
 
-exports.register.attributes = {
+module.exports.register.attributes = {
   name: 'hapi-jwt-authentication-plugin',
   version: '1.0.0'
 };
