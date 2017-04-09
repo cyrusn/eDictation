@@ -1,9 +1,8 @@
 const Hapi = require('hapi');
 
 const process = require('process');
-const connectDB = require('./db/connect');
+const connectDB = require('../mongodb/connect');
 
-// hapi plugin
 const Inert = require('inert');
 const Vision = require('vision');
 const JWT = require('./plugin/jwt');
@@ -11,8 +10,8 @@ const Logging = require('./plugin/good');
 const Routes = require('./plugin/routes');
 const Swagger = require('./plugin/swagger');
 
-const logger = require('./helper/logger');
-const Config = require('./helper/config')();
+const logger = require('../helper/logger');
+const Config = require('../setting')();
 
 const server = new Hapi.Server({
   connections: {

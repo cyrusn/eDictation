@@ -10,11 +10,21 @@ const UserSchema = Schema({
   ename: {type: String, required: true},
   cname: {type: String},
   cohorts: [{
-    schoolYear: {type: String},
-    classCode: {type: String},
-    classNo: {type: Number}
+    schoolYear: {type: String, required: true},
+    classCode: {type: String, required: true},
+    classNo: {type: Number, required: true}
   }]
 });
+
+UserSchema.statics.findOneAndUpdatePassword = function (query, password) {
+  const that = this;
+  const saltRounds = 10;
+  return bcrypt.hash(password, saltRounds)
+  .then(hash => {
+    console.log(hash);
+    return that.findOne(query).update({password: hash});
+  });
+};
 
 UserSchema.pre('save', function (next) {
   var that = this;

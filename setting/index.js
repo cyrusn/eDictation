@@ -1,6 +1,6 @@
 const process = require('process');
-const production = require('../config');
-const development = require('../config_dev');
+const production = require('../config.json');
+const development = require('./dev.json');
 
 const config = {production, development};
 

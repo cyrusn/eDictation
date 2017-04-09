@@ -1,6 +1,7 @@
-const VocabModel = require('../../db/model/vocab');
-const UserModel = require('../../db/model/user');
-const Boom = require('boom');
+const VocabModel = require('../../../mongodb/model/vocab');
+const UserModel = require('../../../mongodb/model/user');
+
+const PromiseBoomReject = require('./helper').PromiseBoomReject;
 
 module.exports = {
   add: (request, reply) => {
@@ -37,7 +38,7 @@ function importVocabs (vocabs) {
             message: `${results.length} records are imported`
           };
         },
-        err => Boom.badRequest(err)
+        PromiseBoomReject('badRequest')
       );
 }
 
@@ -48,9 +49,9 @@ function add (vocab) {
     result => UserModel.findOneAndUpdate({_id: vocab._creator}, {$push: {vocabularies: result._id}})
     .then(
       result => result,
-      err => Boom.badRequest(err)
+      PromiseBoomReject('badRequest')
       ),
-    err => Boom.badRequest(err)
+    PromiseBoomReject('badRequest')
   );
 }
 

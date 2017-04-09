@@ -1,12 +1,12 @@
 const Swagger = require('hapi-swagger');
-const Pack = require('../package.json');
+const Pack = require('../../package.json');
 
 const options = {
   info: {
     'title': 'eDictation API Documentation',
     'version': Pack.version
   },
-  basePath: '/api',
+  basePath: '/',
   pathPrefixSize: 2
 };
 
