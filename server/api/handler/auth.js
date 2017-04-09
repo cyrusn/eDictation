@@ -1,11 +1,12 @@
 // const logger = require('../../helper/logger');
 const Boom = require('boom');
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const UserModel = require('../../db/model/user');
+const UserModel = require('../../../mongodb/model/user');
 
-const Config = require('../../helper/config')();
+const Config = require('../../../setting')();
 const JWTConfig = Config.jwt;
 const KEY = JWTConfig.key;
 const EXP = JWTConfig.exp;
@@ -17,24 +18,16 @@ const JWTOption = {
 };
 
 module.exports = {
-  import: (request, reply) => {
-    const users = request.payload;
-    importUser(users).then(reply, reply);
-  },
   sign: (request, reply) => {
     const payload = request.payload;
     const username = payload.username;
     const password = payload.password;
-    sign(username, password).then(reply, reply);
+    sign(username, password).then(reply).catch(reply);
   },
   refresh: (request, reply) => {
     const headers = request.headers;
-    refresh(headers.authorization).then(reply, reply);
+    refresh(headers.authorization).then(reply).catch(reply);
   }
-};
-
-module.exports.test = {
-  importUser, sign, refresh
 };
 
 function refresh (token) {
@@ -51,55 +44,22 @@ function refresh (token) {
 }
 
 function sign (username, password) {
-  return authorize(username, password)
-    .then(payload => {
-      if (!payload) return promiseBoomReject('unauthorized')();
-      const token = jwt.sign(payload, KEY, JWTOption);
-      return {token};
-    });
-}
+  const rejectMessage = `${username} not found.`;
 
-function authorize (username, password) {
   return UserModel.findOne({username})
     .select('-__v ')
     .then(user => {
-      if (!user) return promiseBoomReject('notFound', `${username} not found.`)();
+      if (!user) return Promise.reject(Boom.notFound(rejectMessage));
       return user;
     })
     .then(user => bcrypt.compare(password, user.password, function (err, ok) {
-      if (!ok || err) return promiseBoomReject('unauthorized')(err);
+      if (!ok || err) return Promise.reject(Boom.unauthorized(err));
       return Promise.resolve(user);
-    }));
-}
-
-function importUser (users) {
-  const successResponse = results => {
-    const message = `${results.length} users are imported`;
-    return {message};
-  };
-
-  return Promise.all(users.map(register))
-  .then(successResponse);
-}
-
-function register (user) {
-  const createSuccessResponse = user => {
-    const message = `${user.username} is registered successfully`;
-    return {message};
-  };
-
-  const userModel = UserModel(user);
-
-  return userModel
-    .save()
-    .then(
-      createSuccessResponse,
-      promiseBoomReject('badRequest')
-    );
-}
-
-function promiseBoomReject (methodName, overrideMessage) {
-  return function (err) {
-    return Promise.promiseBoomReject(Boom[methodName](overrideMessage || err));
-  };
+    }))
+    .then(user => {
+      const payload = Object.assign({}, user);
+      delete payload.password;
+      const token = jwt.sign(payload, KEY, JWTOption);
+      return token;
+    });
 }

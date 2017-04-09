@@ -4,8 +4,9 @@
   "description": "An application for dictation",
   "main": "main.js",
   "scripts": {
-    "start": "NODE_ENV=production node main.js",
-    "dev": "NODE_ENV=development nodemon main.js",
+    "start": "NODE_ENV=production ./app.js",
+    "dev": "NODE_ENV=development nodemon ./server/server.js",
+    "db": "mongod --dbpath=./database",
     "test": "mocha"
   },
   "keywords": [
@@ -37,7 +38,8 @@
     "lodash": "^4.17.4",
     "mongoose": "^4.9.1",
     "tracer": "^0.8.7",
-    "vision": "^4.1.1"
+    "vision": "^4.1.1",
+    "yargs": "^7.0.2"
   },
   "devDependencies": {
     "mocha": "^3.2.0",

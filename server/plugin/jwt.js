@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Boom = require('boom');
 
-const Config = require('../helper/config')();
+const Config = require('../../setting')();
 const KEY = Config.jwt.key;
 const ALGORITHM = Config.jwt.algorithm;
 
