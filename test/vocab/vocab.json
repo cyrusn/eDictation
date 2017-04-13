@@ -1,5 +1,4 @@
-{
-  "list": [
+[
   {
     "definations": ["接受"],
     "partOfSpeech": "v",
@@ -1605,4 +1604,4 @@
     "partOfSpeech": "v",
     "title": "yawn"
   }
-]}
+]

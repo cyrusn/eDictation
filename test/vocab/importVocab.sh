@@ -1,5 +1,5 @@
 userFile="./sessions/user1.json"
 method="POST"
-testPath=":5000/api/vocabularies/import"
+testPath=":5000/api/vocabs/import"
 
-jq '[.list[] | {title, definations: [{partOfSpeech, chi: .definations[]}]}]' < ./vocab/vocab.json | http --session=${userFile} ${method} ${testPath}
+jq '[.[] | {title, definations: [{partOfSpeeches: [.partOfSpeech], translations: .definations}]}]' < ./vocab/vocab.json | http --session=${userFile} ${method} ${testPath}

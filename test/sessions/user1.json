@@ -1,17 +1,17 @@
 {
-    "__meta__": {
-        "about": "HTTPie session file",
-        "help": "https://httpie.org/docs#sessions",
-        "httpie": "0.9.8"
-    },
-    "auth": {
-        "password": null,
-        "type": null,
-        "username": null
-    },
-    "cookies": {},
-    "headers": {
-        "Accept": "application/json, */*",
-        "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkN5cnVzTiIsImxhc3ROYW1lIjoiTmdhbiIsImZpcnN0TmFtZSI6IkN5cnVzIiwiZW1haWwiOiJjeXJ1c25jeUBnbWFpbC5jb20iLCJfaWQiOiI1OGU0N2U4NTczOWJkOWZhZjMyZjAzYTEiLCJpYXQiOjE0OTE0Mzk5MDEsImV4cCI6MTQ5MTQ0MTcwMX0.mWTPWYDDNyGqB_7bkATWTZRT1hBR9KKn-4XCAdWtmWc"
-    }
+  "__meta__": {
+    "about": "HTTPie session file",
+    "help": "https://httpie.org/docs#sessions",
+    "httpie": "0.9.8"
+  },
+  "auth": {
+    "password": null,
+    "type": null,
+    "username": null
+  },
+  "cookies": {},
+  "headers": {
+    "Accept": "application/json, */*",
+    "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1OGVmMGEzYjhiOThhNWU4OTgxYjIwNjQiLCJyb2xlIjoiYWRtaW4iLCJjbmFtZSI6Iumhj-aYrea0iyIsImVuYW1lIjoiTmdhbiBDaGl1IFlldW5nIiwidXNlcm5hbWUiOiJscGN5biIsImNvaG9ydHMiOltudWxsXSwiaWF0IjoxNDkyMDY0MDUwLCJleHAiOjE0OTIwNjU4NTB9.9_q3wCpmTqC57V4o2bFAsFaQ3P9jEzl-i-thc3twXXE"
+  }
 }
