@@ -2,5 +2,7 @@ module.exports = {
   command: 'serve',
   aliases: ['s'],
   desc: 'start server',
-  handler: require('../server/server')
+  handler: function (argv) {
+    require('../server/server');
+  }
 };

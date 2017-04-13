@@ -16,6 +16,14 @@ const UserSchema = Schema({
   }]
 });
 
+UserSchema.set({'autoIndex': false});
+UserSchema.index({
+  'username': 1,
+  'cohorts.schoolYear': -1,
+  'cohorts.classCode': -1,
+  'cohorts.classNo': -1
+});
+
 UserSchema.statics.findOneAndUpdatePassword = function (query, password) {
   const that = this;
   const saltRounds = 10;

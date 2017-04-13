@@ -4,7 +4,7 @@ const Schema = require('mongoose').Schema;
 
 const QuizSchema = Schema({
   creator: {type: String, required: true, ref: 'User'},
-  name: {type: String, required: true},
+  name: {type: String, required: true, index: true},
   vocabs: [{type: Schema.Types.ObjectId, ref: 'Vocab'}],
   targets: [{type: String, ref: 'User'}]
 });
