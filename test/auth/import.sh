@@ -1,4 +1,12 @@
 method="POST"
-testPath=":5000/api/auth/import"
+files=(
+  "student"
+  "teacher"
+  "admin"
+)
 
-jq '.users' < './auth/users.json' | http  ${method} ${testPath}
+for file in "${files[@]}"
+do
+  node ./app.js import "./data/${file}.json"
+done
+# rm ${dummyFile}
