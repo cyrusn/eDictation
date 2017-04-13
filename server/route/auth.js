@@ -19,9 +19,17 @@ module.exports = [{
   method: 'GET',
   path: '/refresh',
   config: {
-    auth: 'jwt',
+    auth: {
+      strategy: 'jwt',
+      scope: ['admin', 'teacher', 'student']
+    },
     description: 'Refresh JWT token',
-    tags: ['api', 'auth']
+    tags: ['api', 'auth'],
+    validate: {
+      headers: Joi.object({
+        authorization: Joi.string().required()
+      }).unknown()
+    }
   },
   handler: authHandler.refresh
 }];

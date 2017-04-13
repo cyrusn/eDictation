@@ -2,17 +2,17 @@ const _ = require('lodash');
 // const Joi = require('joi');
 
 const settings = [{
-  routes: require('../api/route/publicFolder'),
+  routes: require('../route/publicFolder'),
   prefix: '/'
 }, {
-  routes: require('../api/route/test'),
+  routes: require('../route/test'),
   prefix: '/api/test'
-// }, {
-//   routes: require('../api/route/auth'),
-//   prefix: '/api/auth'
-// }, {
-//   routes: require('../api/route/user'),
-//   prefix: '/api/user'
+}, {
+  routes: require('../route/auth'),
+  prefix: '/api/auth'
+}, {
+  routes: require('../route/vocab'),
+  prefix: '/api/vocabs'
 // }, {
 //   routes: require('../api/route/quiz'),
 //   prefix: '/api/quizzes'

@@ -8,10 +8,6 @@
 	+ admin
 - `admin` can add or remove vocabulary
 - test
-	+ loop all the vocabulary
-	+ shuffle questions
-	+ if `noOfCurrentCorrectAnswer` is less the 80% of total no of answered question.
-		* then test will restart.
 - marking system
 - generate report
 - create database for vocabulary
@@ -30,7 +26,6 @@
 ## Use JWT for authetication
 - save to header, using a short live token
 - [JSON Web Tokens - jwt.io](https://jwt.io/)
--
 
 # MongoDB as Database / Mongoose as node.js drive
 - [Mongoose Quick Start v4.9.2](http://mongoosejs.com/docs/index.html)

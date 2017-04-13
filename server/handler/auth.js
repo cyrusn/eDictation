@@ -4,9 +4,9 @@ const Boom = require('boom');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const UserModel = require('../../../mongodb/model/user');
+const UserModel = require('../../model/user');
 
-const Config = require('../../../setting')();
+const Config = require('../../setting');
 const JWTConfig = Config.jwt;
 const KEY = JWTConfig.key;
 const EXP = JWTConfig.exp;
@@ -48,18 +48,25 @@ function sign (username, password) {
 
   return UserModel.findOne({username})
     .select('-__v ')
+    .lean()
+    .exec()
     .then(user => {
       if (!user) return Promise.reject(Boom.notFound(rejectMessage));
       return user;
     })
-    .then(user => bcrypt.compare(password, user.password, function (err, ok) {
-      if (!ok || err) return Promise.reject(Boom.unauthorized(err));
-      return Promise.resolve(user);
-    }))
+    .then(user => {
+      return new Promise((resolve, reject) => {
+        bcrypt.compare(password, user.password,
+       function (err, ok) {
+         if (!ok || err) return reject(Boom.unauthorized(err));
+         return resolve(user);
+       });
+      });
+    })
     .then(user => {
       const payload = Object.assign({}, user);
       delete payload.password;
       const token = jwt.sign(payload, KEY, JWTOption);
-      return token;
+      return {token};
     });
 }

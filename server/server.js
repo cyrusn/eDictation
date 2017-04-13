@@ -1,7 +1,7 @@
 const Hapi = require('hapi');
 
 const process = require('process');
-const connectDB = require('../mongodb/connect');
+const connectDB = require('../model/connect');
 
 const Inert = require('inert');
 const Vision = require('vision');
@@ -11,7 +11,7 @@ const Routes = require('./plugin/routes');
 const Swagger = require('./plugin/swagger');
 
 const logger = require('../helper/logger');
-const Config = require('../setting')();
+const Config = require('../setting');
 
 const server = new Hapi.Server({
   connections: {
@@ -33,9 +33,9 @@ server.register([
  });
 
 server.start(function () {
-  logger.info(`NODE_ENV: ${process.env.NODE_ENV}`);
-  logger.info('Server running at: ' + server.info.uri);
-  connectDB(function (dbName) {
-    logger.info(`Connected to DB: [${dbName}]`);
-  });
+  if (process.env.NODE_ENV) {
+    logger.info(`NODE_ENV: [${process.env.NODE_ENV}]`);
+  }
+  logger.info(`Server running at: ${server.info.uri}`);
+  connectDB();
 });

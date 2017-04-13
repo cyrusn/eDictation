@@ -2,9 +2,9 @@
   "name": "e_dictation_server",
   "version": "1.0.0",
   "description": "An application for dictation",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=production ./app.js",
+    "start": "NODE_ENV=production node ./app.js",
     "dev": "NODE_ENV=development nodemon ./server/server.js",
     "db": "mongod --dbpath=./database",
     "test": "mocha"
