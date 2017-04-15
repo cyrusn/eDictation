@@ -13,10 +13,12 @@ const Swagger = require('./plugin/swagger');
 const logger = require('../helper/logger');
 const Config = require('../setting');
 
+const Path = require('path');
+
 const server = new Hapi.Server({
   connections: {
     routes: {
-      files: { relativeTo: Config.public.path }
+      files: { relativeTo: Path.join(__dirname, '../', Config.public.path) }
     }}
 });
 
@@ -26,7 +28,7 @@ server.connection({
 });
 
 server.register([
-  Logging, Inert, Vision, JWT, Swagger, Routes
+  Inert, Logging, Vision, JWT, Swagger, Routes
 ],
  err => {
    if (err) return console.error(err);

@@ -1,17 +1,17 @@
-const handler = {
-  directory: {
-    path: '.',
-    redirectToSlash: true,
-    index: true
-  }
-};
-
 module.exports = [{
   method: 'GET',
-  path: '/{param*}',
+  path: '/{file*}',
   config: {
+    auth: false,
     description: 'Serve Public Folder',
     tags: ['api', 'public'], // ADD THIS TAG
-    handler
+    handler: {
+      directory: {
+        path: '.',
+        redirectToSlash: true,
+        index: true,
+        listing: true
+      }
+    }
   }
-}];
+}]
