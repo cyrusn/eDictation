@@ -1,25 +1,17 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import App from './components';
 
-import {App} from './components';
+import { createStore } from 'redux';
+import reducer from './reducers';
+import {initState} from './state';
 
-import {Subscribe, createStore} from './state';
-import {reaction} from './reactions';
-import * as actions from './actions';
+let store = createStore(reducer, initState);
 
-createStore(actions, reaction);
-
-class Application extends Component {
-  componentDidMount () {
-    Subscribe(() => this.forceUpdate());
-  }
-
-  render () {
-    return <App />;
-  }
-}
-
-ReactDOM.render(
-  <Application />,
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 );

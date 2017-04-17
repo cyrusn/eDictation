@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import {Navbar} from './navbar';
-import {Body} from './body';
+import Navbar from './header';
+import Session from '../containers/session';
+import Footer from './footer';
 
-export const App = () => (
+export default () => (
   <div>
     <Navbar />
-    <Body />
+    <div className='container'>
+      <Session />
+    </div>
+    <Footer />
   </div>
 );
