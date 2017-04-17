@@ -3,11 +3,11 @@
     "name": "eDictation"
   },
   "public": {
-    "path": "../public"
+    "path": "./public"
   },
   "log": {
     "name": "eDictation.log",
-    "path": "../log"
+    "path": "./log"
   },
   "server": {
     "host": "localhost",

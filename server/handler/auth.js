@@ -57,16 +57,17 @@ function sign (username, password) {
     .then(user => {
       return new Promise((resolve, reject) => {
         bcrypt.compare(password, user.password,
-       function (err, ok) {
-         if (!ok || err) return reject(Boom.unauthorized(err));
-         return resolve(user);
-       });
+        (err, ok) => {
+          if (err) return reject(Boom.unauthorized(err));
+          if (!ok) return reject(Boom.unauthorized('Invalid Password'));
+          return resolve(user);
+        });
       });
     })
     .then(user => {
       const payload = Object.assign({}, user);
       delete payload.password;
-      const token = jwt.sign(payload, KEY, JWTOption);
-      return {token};
+      payload.token = jwt.sign(payload, KEY, JWTOption);
+      return payload;
     });
 }
